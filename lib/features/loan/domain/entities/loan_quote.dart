@@ -5,7 +5,7 @@ class LoanQuote {
   final int totalRepayment;
   final DateTime repaymentDate;
 
-  LoanQuote({
+  const LoanQuote({
     required this.amount,
     required this.periodDays,
     required this.interestRate,
