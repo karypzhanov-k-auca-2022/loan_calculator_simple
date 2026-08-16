@@ -20,10 +20,9 @@ void main() {
     expect(quote.repaymentDate, equals(DateTime(2026, 8, 29))); // after 14 days
   });
 
-
   test('throws error when amount is outside allowed range', () {
     expect(
-          () => calculator(
+      () => calculator(
         amount: 4000,
         periodDays: 14,
         today: DateTime(2026, 8, 14),
@@ -34,7 +33,7 @@ void main() {
 
   test('throws error when amount has invalid step', () {
     expect(
-          () => calculator(
+      () => calculator(
         amount: 5500,
         periodDays: 14,
         today: DateTime(2026, 8, 14),
@@ -45,7 +44,7 @@ void main() {
 
   test('throws error when period is unsupported', () {
     expect(
-          () => calculator(
+      () => calculator(
         amount: 10000,
         periodDays: 10,
         today: DateTime(2026, 8, 14),

@@ -8,7 +8,14 @@ import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_stat
 import '../bloc/loan_bloc.dart';
 
 class LoanCalculatorPage extends StatelessWidget {
-  const LoanCalculatorPage({super.key});
+  final bool isDarkMode;
+  final VoidCallback onToggleTheme;
+
+  const LoanCalculatorPage({
+    super.key,
+    required this.isDarkMode,
+    required this.onToggleTheme,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,18 @@ class LoanCalculatorPage extends StatelessWidget {
 
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Loan Calculator')),
+          appBar: AppBar(
+            title: const Text('Loan Calculator'),
+            actions: [
+              IconButton(
+                tooltip: isDarkMode
+                    ? 'Switch to light theme'
+                    : 'Switch to dark theme',
+                onPressed: onToggleTheme,
+                icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+              ),
+            ],
+          ),
           body: SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -131,6 +149,12 @@ class _LoanControls extends StatelessWidget {
               min: 0,
               max: (periods.length - 1).toDouble(),
               divisions: periods.length - 1,
+              activeColor: Colors.orange,
+              inactiveColor: Colors.orange.shade100,
+              thumbColor: Colors.deepOrange,
+              overlayColor: WidgetStatePropertyAll(
+                Colors.orange.withValues(alpha: 0.18),
+              ),
 
               onChanged: state.status == LoanStatus.loading
                   ? null
@@ -197,11 +221,18 @@ class _LoanSummary extends StatelessWidget {
             const SizedBox(height: 24),
             const Text('Total repayment'),
             const SizedBox(height: 4),
-            Text(
-              _money(quote.totalRepayment),
-              style: Theme.of(
-                context,
-              ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+            TweenAnimationBuilder<double>(
+              tween: Tween(end: quote.totalRepayment.toDouble()),
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOut,
+              builder: (context, value, child) {
+                return Text(
+                  _money(value.round()),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
             const Divider(),

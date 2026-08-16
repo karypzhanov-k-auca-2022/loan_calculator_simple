@@ -51,7 +51,7 @@ class LoanRepositoryImpl implements LoanRepository {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'amount': quote.amount,
-            'periodDays': quote.periodDays,
+            'period': quote.periodDays,
             'totalRepayment': quote.totalRepayment,
           }),
         )

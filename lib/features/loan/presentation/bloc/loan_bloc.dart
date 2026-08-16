@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loan_calculator_simple/features/loan/domain/repositories/loan_repository.dart';
 import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote.dart';
@@ -55,7 +56,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
     );
 
-    await _saveSelection(emit);
+    await _saveSelection();
   }
 
   Future<void> _onPeriodChanged(
@@ -71,7 +72,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
     );
 
-    await _saveSelection(emit);
+    await _saveSelection();
   }
 
   Future<void> _onSubmitted(
@@ -95,7 +96,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         ),
       );
 
-      await _saveSelection(emit);
+      await _saveSelection();
       await repository.submitApplication(validateQuote);
       emit(state.copyWith(status: LoanStatus.success));
     } catch (_) {
@@ -108,19 +109,14 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
     }
   }
 
-  Future<void> _saveSelection(Emitter<LoanState> emit) async {
+  Future<void> _saveSelection() async {
     try {
       await repository.saveSelection(
         amount: state.quote.amount,
         periodDays: state.quote.periodDays,
       );
-    } catch (_) {
-      emit(
-        state.copyWith(
-          status: LoanStatus.error,
-          errorMessage: "Failed to save selection.",
-        ),
-      );
+    } on Exception catch (error, stackTrace) {
+      debugPrint('Failed to save selection: $error\n$stackTrace');
     }
   }
 }
