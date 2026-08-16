@@ -55,7 +55,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
     );
 
-    await _saveSelection();
+    await _saveSelection(emit);
   }
 
   Future<void> _onPeriodChanged(
@@ -71,7 +71,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
     );
 
-    await _saveSelection();
+    await _saveSelection(emit);
   }
 
   Future<void> _onSubmitted(
@@ -95,7 +95,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         ),
       );
 
-      await _saveSelection();
+      await _saveSelection(emit);
       await repository.submitApplication(validateQuote);
       emit(state.copyWith(status: LoanStatus.success));
     } catch (_) {
@@ -108,7 +108,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
     }
   }
 
-  Future<void> _saveSelection() async {
+  Future<void> _saveSelection(Emitter<LoanState> emit) async {
     try {
       await repository.saveSelection(
         amount: state.quote.amount,

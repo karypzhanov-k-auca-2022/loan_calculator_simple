@@ -56,9 +56,9 @@ class LoanCalculatorPage extends StatelessWidget {
                             )
                           : Column(
                               children: [
-                                Expanded(child: _LoanControls(state: state)),
+                                _LoanControls(state: state),
                                 const SizedBox(height: 24),
-                                Expanded(child: _LoanSummary(state: state)),
+                                _LoanSummary(state: state),
                               ],
                             ),
                     ),
@@ -81,7 +81,8 @@ class _LoanControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final periods = CalculateLoanQuote.availablePeriods;
-    final selectedPeriodIndex = periods.indexOf(state.quote.periodDays);
+    final periodIndex = periods.indexOf(state.quote.periodDays);
+    final selectedPeriodIndex = periodIndex != -1 ? periodIndex : 0;
 
     return Card(
       child: Padding(
