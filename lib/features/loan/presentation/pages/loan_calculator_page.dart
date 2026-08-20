@@ -65,7 +65,7 @@ class LoanCalculatorPage extends StatelessWidget {
                       constraints: const BoxConstraints(maxWidth: 1000),
                       child: isWide
                           ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               children: [
                                 Expanded(child: _LoanControls(state: state)),
                                 const SizedBox(width: 24),
@@ -106,7 +106,7 @@ class _LoanControls extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text(
               'Choose loan',
@@ -134,7 +134,7 @@ class _LoanControls extends StatelessWidget {
             ),
 
             const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [Text(r'$5,000'), Text(r'$50,000')],
             ),
             const SizedBox(height: 32),
@@ -166,7 +166,7 @@ class _LoanControls extends StatelessWidget {
             ),
 
             const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [Text('7 days'), Text('28 days')],
             ),
           ],
@@ -214,7 +214,7 @@ class _LoanSummary extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             Text('Your quote', style: Theme.of(context).textTheme.titleLarge),
 
@@ -228,9 +228,9 @@ class _LoanSummary extends StatelessWidget {
               builder: (context, value, child) {
                 return Text(
                   _money(value.round()),
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.displaySmall?.copyWith(fontWeight: .bold),
                 );
               },
             ),
