@@ -20,22 +20,22 @@ class LoanCalculatorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoanBloc, LoanState>(
-      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
-        if (state.status == LoanStatus.success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Application submitted successfully')),
-          );
-        }
-
-        if (state.status == LoanStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.errorMessage ?? 'Something went wrong. Try again!',
+        switch (state) {
+          case LoanSuccess():
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Application submitted successfully'),
               ),
-            ),
-          );
+            );
+
+          case LoanFailure(:final errorMessage):
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(errorMessage)));
+
+          case LoanIdle() || LoanLoading():
+            break;
         }
       },
 
@@ -124,7 +124,7 @@ class _LoanControls extends StatelessWidget {
                       CalculateLoanQuoteUseCase.minimumAmount) ~/
                   CalculateLoanQuoteUseCase.amountStep,
               label: _money(state.quote.amount),
-              onChanged: state.status == LoanStatus.loading
+              onChanged: state is LoanLoading
                   ? null
                   : (value) {
                       context.read<LoanBloc>().add(
@@ -156,7 +156,7 @@ class _LoanControls extends StatelessWidget {
                 Colors.orange.withValues(alpha: 0.18),
               ),
 
-              onChanged: state.status == LoanStatus.loading
+              onChanged: state is LoanLoading
                   ? null
                   : (value) {
                       final period = periods[value.round()];
@@ -254,12 +254,12 @@ class _LoanSummary extends StatelessWidget {
             const SizedBox(height: 24),
 
             FilledButton(
-              onPressed: state.status == LoanStatus.loading
+              onPressed: state is LoanLoading
                   ? null
                   : () {
                       context.read<LoanBloc>().add(const LoanSubmitted());
                     },
-              child: state.status == LoanStatus.loading
+              child: state is LoanLoading
                   ? const SizedBox(
                       width: 22,
                       height: 22,

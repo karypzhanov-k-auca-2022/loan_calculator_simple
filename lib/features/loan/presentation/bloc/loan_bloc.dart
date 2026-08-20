@@ -12,7 +12,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
 
   LoanBloc({required this.repository, required this.calculator})
     : super(
-        LoanState(
+        LoanIdle(
           quote: calculator(
             amount: 10000,
             periodDays: 14,
@@ -37,9 +37,15 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         periodDays: selection.periodDays,
         today: DateTime.now(),
       );
-      emit(state.copyWith(quote: quote));
+      emit(LoanIdle(quote: quote));
+      
     } catch (_) {
-      emit(state.copyWith(status: LoanStatus.error));
+      emit(
+        LoanFailure(
+          quote: state.quote,
+          errorMessage: 'Failed to restore previous selection.',
+        ),
+      );
     }
   }
 
@@ -52,9 +58,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       periodDays: state.quote.periodDays,
       today: DateTime.now(),
     );
-    emit(
-      state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
-    );
+    emit(LoanIdle(quote: quote));
 
     await _saveSelection();
   }
@@ -68,9 +72,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       periodDays: event.periodDays,
       today: DateTime.now(),
     );
-    emit(
-      state.copyWith(quote: quote, status: LoanStatus.idle, clearError: true),
-    );
+    emit(LoanIdle(quote: quote));
 
     await _saveSelection();
   }
@@ -79,7 +81,7 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
     LoanSubmitted event,
     Emitter<LoanState> emit,
   ) async {
-    if (state.status == LoanStatus.loading) return;
+    if (state is LoanLoading) return;
 
     try {
       final validateQuote = calculator(
@@ -88,22 +90,16 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         today: DateTime.now(),
       );
 
-      emit(
-        state.copyWith(
-          quote: validateQuote,
-          status: LoanStatus.loading,
-          clearError: true,
-        ),
-      );
+      emit(LoanLoading(quote: validateQuote));
 
       await _saveSelection();
       await repository.submitApplication(validateQuote);
-      emit(state.copyWith(status: LoanStatus.success));
+      emit(LoanSuccess(quote: validateQuote));
     } catch (_) {
       emit(
-        state.copyWith(
-          status: LoanStatus.error,
-          errorMessage: "Failed to submit application.",
+        LoanFailure(
+          quote: state.quote,
+          errorMessage: 'Failed to submit application.',
         ),
       );
     }
