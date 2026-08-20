@@ -1,23 +1,23 @@
-abstract class LoanEvent {
+sealed class LoanEvent {
   const LoanEvent();
 }
 
-class LoanStarted extends LoanEvent {
+final class LoanStarted extends LoanEvent {
   const LoanStarted();
 }
 
-class LoanAmountChanged extends LoanEvent {
-  final int amount;
-
+final class LoanAmountChanged extends LoanEvent {
   const LoanAmountChanged(this.amount);
+
+  final int amount;
 }
 
-class LoanPeriodChanged extends LoanEvent {
-  final int periodDays;
-
+final class LoanPeriodChanged extends LoanEvent {
   const LoanPeriodChanged(this.periodDays);
+
+  final int periodDays;
 }
 
-class LoanSubmitted extends LoanEvent {
+final class LoanSubmitted extends LoanEvent {
   const LoanSubmitted();
 }

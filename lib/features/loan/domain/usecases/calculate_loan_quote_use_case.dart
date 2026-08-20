@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import '../entities/loan_quote.dart';
 
 @injectable
-class CalculateLoanQuoteUseCase {
+final class CalculateLoanQuoteUseCase {
   static const int minimumAmount = 5000;
   static const int maximumAmount = 50000;
   static const int amountStep = 1000;

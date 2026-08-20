@@ -8,7 +8,7 @@ import 'loan_event.dart';
 import 'loan_state.dart';
 
 @injectable
-class LoanBloc extends Bloc<LoanEvent, LoanState> {
+final class LoanBloc extends Bloc<LoanEvent, LoanState> {
   final LoanRepository repository;
   final CalculateLoanQuoteUseCase calculator;
 
