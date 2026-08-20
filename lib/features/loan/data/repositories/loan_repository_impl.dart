@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:loan_calculator_simple/features/loan/data/dtos/loan_application_request_dto.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_selection.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/loan_repository.dart';
 
+@LazySingleton(as: LoanRepository)
 final class LoanRepositoryImpl implements LoanRepository {
   final SharedPreferences _sharedPreferences;
   final Dio _dio;

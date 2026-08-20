@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loan_calculator_simple/app/theme/app_theme.dart';
 import 'package:loan_calculator_simple/dependency_injection.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_bloc.dart';
+import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_event.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/pages/loan_calculator_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,7 +55,7 @@ class _LoanCalculatorAppState extends State<LoanCalculatorApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<LoanBloc>(),
+      create: (_) => getIt<LoanBloc>()..add(const LoanStarted()),
       child: MaterialApp(
         title: 'Loan Calculator',
         debugShowCheckedModeBanner: false,
