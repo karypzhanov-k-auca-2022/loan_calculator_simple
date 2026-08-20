@@ -40,7 +40,9 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         today: DateTime.now(),
       );
       emit(LoanIdle(quote: quote));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('Failed to restore previous selection: $error\n$stackTrace');
+
       emit(
         LoanFailure(
           quote: state.quote,
@@ -96,7 +98,9 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
       await _saveSelection();
       await repository.submitApplication(validateQuote);
       emit(LoanSuccess(quote: validateQuote));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('Failed to submit application: $error\n$stackTrace');
+
       emit(
         LoanFailure(
           quote: state.quote,
