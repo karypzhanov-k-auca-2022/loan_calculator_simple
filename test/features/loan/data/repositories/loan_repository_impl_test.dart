@@ -1,8 +1,5 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:loan_calculator_simple/features/loan/data/repositories/loan_repository_impl.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,10 +17,11 @@ void main() {
   test('saves and restores the latest selection', () async {
     final repository = LoanRepositoryImpl(
       sharedPreferences: preferences,
-      client: MockClient((_) async => http.Response('{}', 201)),
+      dio: Dio(),
     );
 
     await repository.saveSelection(amount: 24000, periodDays: 21);
+
     final selection = await repository.loadSelection();
 
     expect(selection?.amount, 24000);
@@ -31,23 +29,32 @@ void main() {
   });
 
   test('submits the API payload required by the assignment', () async {
-    final client = MockClient((request) async {
-      expect(
-        request.url,
-        Uri.parse('https://jsonplaceholder.typicode.com/posts'),
-      );
-      expect(request.headers['content-type'], 'application/json');
-      expect(jsonDecode(request.body), {
-        'amount': 10000,
-        'period': 14,
-        'totalRepayment': 11500,
-      });
+    final dio = Dio();
 
-      return http.Response('{}', 201);
-    });
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          expect(
+            options.uri.toString(),
+            'https://jsonplaceholder.typicode.com/posts',
+          );
+
+          expect(options.data, {
+            'amount': 10000,
+            'period': 14,
+            'totalRepayment': 11500,
+          });
+
+          handler.resolve(
+            Response<void>(requestOptions: options, statusCode: 201),
+          );
+        },
+      ),
+    );
+
     final repository = LoanRepositoryImpl(
       sharedPreferences: preferences,
-      client: client,
+      dio: dio,
     );
 
     await repository.submitApplication(

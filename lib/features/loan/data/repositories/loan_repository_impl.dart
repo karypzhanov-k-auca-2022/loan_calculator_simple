@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:loan_calculator_simple/features/loan/data/dtos/loan_application_request_dto.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_selection.dart';
@@ -8,21 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/loan_repository.dart';
 
-class LoanRepositoryImpl implements LoanRepository {
+final class LoanRepositoryImpl implements LoanRepository {
   final SharedPreferences _sharedPreferences;
-  final http.Client _client;
+  final Dio _dio;
 
   LoanRepositoryImpl({
     required SharedPreferences sharedPreferences,
-    required http.Client client,
+    required Dio dio,
   }) : _sharedPreferences = sharedPreferences,
-       _client = client;
+       _dio = dio;
 
   static const _amountKey = 'loan_amount';
   static const _periodKey = 'loan_period';
-  static final Uri _endpoint = Uri.parse(
-    'https://jsonplaceholder.typicode.com/posts',
-  );
+  static const _endpoint = 'https://jsonplaceholder.typicode.com/posts';
 
   @override
   Future<LoanSelection?> loadSelection() async {
@@ -49,16 +45,6 @@ class LoanRepositoryImpl implements LoanRepository {
   Future<void> submitApplication(LoanQuote quote) async {
     final request = LoanApplicationRequestDto.fromDomain(quote);
 
-    final response = await _client
-        .post(
-          _endpoint,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(request.toJson()),
-        )
-        .timeout(const Duration(seconds: 10));
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to submit application');
-    }
+    await _dio.post<void>(_endpoint, data: request.toJson());
   }
 }
