@@ -38,7 +38,6 @@ class LoanBloc extends Bloc<LoanEvent, LoanState> {
         today: DateTime.now(),
       );
       emit(LoanIdle(quote: quote));
-      
     } catch (_) {
       emit(
         LoanFailure(

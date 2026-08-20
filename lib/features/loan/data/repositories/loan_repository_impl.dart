@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:loan_calculator_simple/features/loan/data/dtos/loan_application_request_dto.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_selection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/repositories/loan_repository.dart';
 
 class LoanRepositoryImpl implements LoanRepository {
@@ -45,15 +47,13 @@ class LoanRepositoryImpl implements LoanRepository {
 
   @override
   Future<void> submitApplication(LoanQuote quote) async {
+    final request = LoanApplicationRequestDto.fromDomain(quote);
+
     final response = await _client
         .post(
           _endpoint,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'amount': quote.amount,
-            'period': quote.periodDays,
-            'totalRepayment': quote.totalRepayment,
-          }),
+          body: jsonEncode(request.toJson()),
         )
         .timeout(const Duration(seconds: 10));
 
