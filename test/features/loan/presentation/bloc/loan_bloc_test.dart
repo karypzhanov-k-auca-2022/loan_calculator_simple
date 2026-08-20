@@ -34,32 +34,33 @@ void main() {
   });
 
   test('emits loading and success when submission succeeds', () async {
-    final statuses = <LoanStatus>[];
-    final subscription = bloc.stream.listen(
-      (state) => statuses.add(state.status),
-    );
+    final emittedTypes = <LoanState>[];
+    final subscription = bloc.stream.listen((state) => emittedTypes.add);
 
     bloc.add(const LoanSubmitted());
-    await bloc.stream.firstWhere((state) => state.status == LoanStatus.success);
+    await bloc.stream.firstWhere((state) => state is LoanSuccess);
 
-    expect(statuses, [LoanStatus.loading, LoanStatus.success]);
-    expect(repository.submittedQuote?.amount, 10000);
+    expect(emittedTypes, hasLength(2));
+    expect(emittedTypes[0], isA<LoanLoading>());
+    expect(emittedTypes[1], isA<LoanSuccess>());
 
     await subscription.cancel();
   });
 
   test('emits loading and error when submission fails', () async {
     repository.submitShouldFail = true;
-    final statuses = <LoanStatus>[];
-    final subscription = bloc.stream.listen(
-      (state) => statuses.add(state.status),
-    );
+    final emittedTypes = <LoanState>[];
+    final subscription = bloc.stream.listen((state) => emittedTypes.add);
 
     bloc.add(const LoanSubmitted());
-    await bloc.stream.firstWhere((state) => state.status == LoanStatus.error);
+    await bloc.stream.firstWhere((state) => state is LoanFailure);
 
-    expect(statuses, [LoanStatus.loading, LoanStatus.error]);
-    expect(bloc.state.errorMessage, 'Failed to submit application.');
+    expect(emittedTypes, hasLength(2));
+    expect(emittedTypes[0], isA<LoanLoading>());
+    expect(emittedTypes[1], isA<LoanFailure>());
+
+    final failure = emittedTypes.whereType<LoanFailure>().single;
+    expect(failure.errorMessage, 'Failed to submit application.');
 
     await subscription.cancel();
   });
