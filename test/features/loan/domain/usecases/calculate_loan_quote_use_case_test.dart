@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote.dart';
+import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 
 void main() {
-  late CalculateLoanQuote calculator;
+  late CalculateLoanQuoteUseCase calculator;
 
   setUp(() {
-    calculator = CalculateLoanQuote();
+    calculator = CalculateLoanQuoteUseCase();
   });
 
   test('calculates loan correctly', () {

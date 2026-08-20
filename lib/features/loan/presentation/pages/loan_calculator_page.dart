@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote.dart';
+import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_event.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_state.dart';
 
@@ -98,7 +98,7 @@ class _LoanControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final periods = CalculateLoanQuote.availablePeriods;
+    final periods = CalculateLoanQuoteUseCase.availablePeriods;
     final periodIndex = periods.indexOf(state.quote.periodDays);
     final selectedPeriodIndex = periodIndex != -1 ? periodIndex : 0;
 
@@ -117,12 +117,12 @@ class _LoanControls extends StatelessWidget {
 
             Slider.adaptive(
               value: state.quote.amount.toDouble(),
-              min: CalculateLoanQuote.minimumAmount.toDouble(),
-              max: CalculateLoanQuote.maximumAmount.toDouble(),
+              min: CalculateLoanQuoteUseCase.minimumAmount.toDouble(),
+              max: CalculateLoanQuoteUseCase.maximumAmount.toDouble(),
               divisions:
-                  (CalculateLoanQuote.maximumAmount -
-                      CalculateLoanQuote.minimumAmount) ~/
-                  CalculateLoanQuote.amountStep,
+                  (CalculateLoanQuoteUseCase.maximumAmount -
+                      CalculateLoanQuoteUseCase.minimumAmount) ~/
+                  CalculateLoanQuoteUseCase.amountStep,
               label: _money(state.quote.amount),
               onChanged: state.status == LoanStatus.loading
                   ? null

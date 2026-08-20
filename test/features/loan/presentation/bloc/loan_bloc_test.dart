@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_selection.dart';
 import 'package:loan_calculator_simple/features/loan/domain/repositories/loan_repository.dart';
-import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote.dart';
+import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_bloc.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_event.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_state.dart';
@@ -13,7 +13,10 @@ void main() {
 
   setUp(() {
     repository = FakeLoanRepository();
-    bloc = LoanBloc(repository: repository, calculator: CalculateLoanQuote());
+    bloc = LoanBloc(
+      repository: repository,
+      calculator: CalculateLoanQuoteUseCase(),
+    );
   });
 
   tearDown(() => bloc.close());

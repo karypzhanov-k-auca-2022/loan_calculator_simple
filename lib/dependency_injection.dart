@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/loan/data/repositories/loan_repository_impl.dart';
 import 'features/loan/domain/repositories/loan_repository.dart';
-import 'features/loan/domain/usecases/calculate_loan_quote.dart';
 import 'features/loan/presentation/bloc/loan_bloc.dart';
 import 'features/loan/presentation/bloc/loan_event.dart';
 
@@ -24,12 +24,14 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  getIt.registerFactory<CalculateLoanQuote>(() => CalculateLoanQuote());
+  getIt.registerFactory<CalculateLoanQuoteUseCase>(
+    () => CalculateLoanQuoteUseCase(),
+  );
 
   getIt.registerFactory<LoanBloc>(
     () => LoanBloc(
       repository: getIt<LoanRepository>(),
-      calculator: getIt<CalculateLoanQuote>(),
+      calculator: getIt<CalculateLoanQuoteUseCase>(),
     )..add(const LoanStarted()),
   );
 }

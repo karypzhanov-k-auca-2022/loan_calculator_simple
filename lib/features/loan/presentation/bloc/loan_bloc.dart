@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loan_calculator_simple/features/loan/domain/repositories/loan_repository.dart';
-import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote.dart';
+import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 
 import 'loan_event.dart';
 import 'loan_state.dart';
 
 class LoanBloc extends Bloc<LoanEvent, LoanState> {
   final LoanRepository repository;
-  final CalculateLoanQuote calculator;
+  final CalculateLoanQuoteUseCase calculator;
 
   LoanBloc({required this.repository, required this.calculator})
     : super(
