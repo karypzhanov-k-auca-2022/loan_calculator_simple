@@ -1,4 +1,4 @@
-include: package:flutter_lints/flutter.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
   language:
@@ -8,9 +8,4 @@ analyzer:
 
 linter:
   rules:
-    always_declare_return_types: true
-    avoid_dynamic_calls: true
-    directives_ordering: true
-    prefer_final_locals: true
-    strict_top_level_inference: true
-    unawaited_futures: true
+    public_member_api_docs: false

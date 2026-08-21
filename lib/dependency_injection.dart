@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import 'package:loan_calculator_simple/dependency_injection.config.dart';
 
-final getIt = GetIt.instance;
+final GetIt getIt = GetIt.instance;
 
 @injectableInit
 Future<void> configureDependencies() async {

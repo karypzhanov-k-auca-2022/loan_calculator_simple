@@ -32,7 +32,9 @@ lib/features/loan/
 
 ```bash
 flutter pub get
-flutter run
+flutter run \
+  --dart-define=API_BASE_URL=https://jsonplaceholder.typicode.com \
+  --dart-define=LOAN_APPLICATION_PATH=/posts
 ```
 
 ## Проверка
@@ -45,7 +47,9 @@ flutter test
 
 ## API
 
-Заявка отправляется POST-запросом на:
+Адрес API передаётся при запуске через `API_BASE_URL` и
+`LOAN_APPLICATION_PATH`. Для тестового окружения заявка отправляется
+POST-запросом на:
 
 ```text
 https://jsonplaceholder.typicode.com/posts
@@ -74,4 +78,3 @@ https://jsonplaceholder.typicode.com/posts
 | Светлая тема | Тёмная тема |
 | --- | --- |
 | ![iOS — Светлая тема](screenshots/ios_light.png) | ![iOS — Тёмная тема](screenshots/ios_dark.png) |
-

@@ -12,6 +12,7 @@
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:loan_calculator_simple/config/api_config.dart' as _i882;
 import 'package:loan_calculator_simple/di/app_module.dart' as _i788;
 import 'package:loan_calculator_simple/features/loan/data/repositories/loan_repository_impl.dart'
     as _i984;
@@ -38,11 +39,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i943.CalculateLoanQuoteUseCase>(
       () => _i943.CalculateLoanQuoteUseCase(),
     );
-    gh.lazySingleton<_i361.Dio>(() => appModule.dio());
+    gh.lazySingleton<_i882.ApiConfig>(() => appModule.apiConfig);
+    gh.lazySingleton<_i361.Dio>(() => appModule.dio(gh<_i882.ApiConfig>()));
     gh.lazySingleton<_i98.LoanRepository>(
       () => _i984.LoanRepositoryImpl(
         sharedPreferences: gh<_i460.SharedPreferences>(),
         dio: gh<_i361.Dio>(),
+        apiConfig: gh<_i882.ApiConfig>(),
       ),
     );
     gh.factory<_i1042.LoanBloc>(

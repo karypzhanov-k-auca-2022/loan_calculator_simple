@@ -4,14 +4,11 @@ import 'package:injectable/injectable.dart';
 import 'package:loan_calculator_simple/features/loan/domain/repositories/loan_repository.dart';
 import 'package:loan_calculator_simple/features/loan/domain/usecases/calculate_loan_quote_use_case.dart';
 
-import 'loan_event.dart';
-import 'loan_state.dart';
+import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_event.dart';
+import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_state.dart';
 
 @injectable
 final class LoanBloc extends Bloc<LoanEvent, LoanState> {
-  final LoanRepository repository;
-  final CalculateLoanQuoteUseCase calculator;
-
   LoanBloc({required this.repository, required this.calculator})
     : super(
         LoanIdle(
@@ -27,6 +24,8 @@ final class LoanBloc extends Bloc<LoanEvent, LoanState> {
     on<LoanPeriodChanged>(_onPeriodChanged);
     on<LoanSubmitted>(_onSubmitted);
   }
+  final LoanRepository repository;
+  final CalculateLoanQuoteUseCase calculator;
 
   Future<void> _onStarted(LoanStarted event, Emitter<LoanState> emit) async {
     try {
@@ -40,7 +39,7 @@ final class LoanBloc extends Bloc<LoanEvent, LoanState> {
         today: DateTime.now(),
       );
       emit(LoanIdle(quote: quote));
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       debugPrint('Failed to restore previous selection: $error\n$stackTrace');
 
       emit(
@@ -98,7 +97,7 @@ final class LoanBloc extends Bloc<LoanEvent, LoanState> {
       await _saveSelection();
       await repository.submitApplication(validateQuote);
       emit(LoanSuccess(quote: validateQuote));
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       debugPrint('Failed to submit application: $error\n$stackTrace');
 
       emit(

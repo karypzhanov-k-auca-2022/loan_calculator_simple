@@ -1,26 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:loan_calculator_simple/config/api_config.dart';
 import 'package:loan_calculator_simple/features/loan/data/dtos/loan_application_request_dto.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_selection.dart';
+import 'package:loan_calculator_simple/features/loan/domain/repositories/loan_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../domain/repositories/loan_repository.dart';
 
 @LazySingleton(as: LoanRepository)
 final class LoanRepositoryImpl implements LoanRepository {
-  final SharedPreferences _sharedPreferences;
-  final Dio _dio;
-
   LoanRepositoryImpl({
     required SharedPreferences sharedPreferences,
     required Dio dio,
+    required ApiConfig apiConfig,
   }) : _sharedPreferences = sharedPreferences,
-       _dio = dio;
+       _dio = dio,
+       _apiConfig = apiConfig;
+  final SharedPreferences _sharedPreferences;
+  final Dio _dio;
+  final ApiConfig _apiConfig;
 
   static const _amountKey = 'loan_amount';
   static const _periodKey = 'loan_period';
-  static const _endpoint = 'https://jsonplaceholder.typicode.com/posts';
 
   @override
   Future<LoanSelection?> loadSelection() async {
@@ -47,6 +48,9 @@ final class LoanRepositoryImpl implements LoanRepository {
   Future<void> submitApplication(LoanQuote quote) async {
     final request = LoanApplicationRequestDto.fromDomain(quote);
 
-    await _dio.post<void>(_endpoint, data: request.toJson());
+    await _dio.post<void>(
+      _apiConfig.loanApplicationPath,
+      data: request.toJson(),
+    );
   }
 }

@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:loan_calculator_simple/features/loan/domain/constants/loan_rules.dart';
+import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_bloc.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_event.dart';
 import 'package:loan_calculator_simple/features/loan/presentation/bloc/loan_state.dart';
 
-import '../bloc/loan_bloc.dart';
-
 class LoanCalculatorPage extends StatelessWidget {
-  final bool isDarkMode;
-  final VoidCallback onToggleTheme;
-
   const LoanCalculatorPage({
-    super.key,
     required this.isDarkMode,
     required this.onToggleTheme,
+    super.key,
   });
+  final bool isDarkMode;
+  final VoidCallback onToggleTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -92,19 +90,18 @@ class LoanCalculatorPage extends StatelessWidget {
 }
 
 class _LoanControls extends StatelessWidget {
-  final LoanState state;
-
   const _LoanControls({required this.state});
+  final LoanState state;
 
   @override
   Widget build(BuildContext context) {
-    final periods = LoanRules.availablePeriods;
+    const periods = LoanRules.availablePeriods;
     final periodIndex = periods.indexOf(state.quote.periodDays);
     final selectedPeriodIndex = periodIndex != -1 ? periodIndex : 0;
 
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
@@ -145,7 +142,6 @@ class _LoanControls extends StatelessWidget {
 
             Slider.adaptive(
               value: selectedPeriodIndex.toDouble(),
-              min: 0,
               max: (periods.length - 1).toDouble(),
               divisions: periods.length - 1,
               activeColor: Colors.orange,
@@ -176,10 +172,9 @@ class _LoanControls extends StatelessWidget {
 }
 
 class _ValueRow extends StatelessWidget {
+  const _ValueRow({required this.label, required this.value});
   final String label;
   final String value;
-
-  const _ValueRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -200,9 +195,8 @@ class _ValueRow extends StatelessWidget {
 }
 
 class _LoanSummary extends StatelessWidget {
-  final LoanState state;
-
   const _LoanSummary({required this.state});
+  final LoanState state;
 
   @override
   Widget build(BuildContext context) {
@@ -274,10 +268,9 @@ class _LoanSummary extends StatelessWidget {
 }
 
 class _SummaryRow extends StatelessWidget {
+  const _SummaryRow({required this.label, required this.value});
   final String label;
   final String value;
-
-  const _SummaryRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +278,7 @@ class _SummaryRow extends StatelessWidget {
       children: [
         Expanded(child: Text(label)),
         const SizedBox(width: 16),
-        Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

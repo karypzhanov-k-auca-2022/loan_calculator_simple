@@ -1,10 +1,4 @@
 class LoanQuote {
-  final int amount;
-  final int periodDays;
-  final double interestRate;
-  final int totalRepayment;
-  final DateTime repaymentDate;
-
   const LoanQuote({
     required this.amount,
     required this.periodDays,
@@ -12,4 +6,9 @@ class LoanQuote {
     required this.totalRepayment,
     required this.repaymentDate,
   });
+  final int amount;
+  final int periodDays;
+  final double interestRate;
+  final int totalRepayment;
+  final DateTime repaymentDate;
 }

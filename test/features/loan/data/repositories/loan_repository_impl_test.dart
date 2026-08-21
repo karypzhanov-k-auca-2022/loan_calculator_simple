@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:loan_calculator_simple/config/api_config.dart';
 import 'package:loan_calculator_simple/features/loan/data/repositories/loan_repository_impl.dart';
 import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late SharedPreferences preferences;
+
+  const apiConfig = ApiConfig(
+    baseUrl: 'https://api.example.test',
+    loanApplicationPath: '/loan-applications',
+  );
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
@@ -18,6 +24,7 @@ void main() {
     final repository = LoanRepositoryImpl(
       sharedPreferences: preferences,
       dio: Dio(),
+      apiConfig: apiConfig,
     );
 
     await repository.saveSelection(amount: 24000, periodDays: 21);
@@ -29,14 +36,14 @@ void main() {
   });
 
   test('submits the API payload required by the assignment', () async {
-    final dio = Dio();
+    final dio = Dio(BaseOptions(baseUrl: apiConfig.baseUrl));
 
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
           expect(
             options.uri.toString(),
-            'https://jsonplaceholder.typicode.com/posts',
+            'https://api.example.test/loan-applications',
           );
 
           expect(options.data, {
@@ -55,6 +62,7 @@ void main() {
     final repository = LoanRepositoryImpl(
       sharedPreferences: preferences,
       dio: dio,
+      apiConfig: apiConfig,
     );
 
     await repository.submitApplication(

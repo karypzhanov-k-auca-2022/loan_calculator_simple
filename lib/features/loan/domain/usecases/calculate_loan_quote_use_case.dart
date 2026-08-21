@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
-import '../constants/loan_rules.dart';
-import '../entities/loan_quote.dart';
+import 'package:loan_calculator_simple/features/loan/domain/constants/loan_rules.dart';
+import 'package:loan_calculator_simple/features/loan/domain/entities/loan_quote.dart';
 
 @injectable
 final class CalculateLoanQuoteUseCase {
